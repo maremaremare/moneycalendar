@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+<title>Frontier JQuery Calendar</title>
+    <link rel="stylesheet" href="bootstrap-2.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap-2.3.2/css/docs.css">
+    <link rel="stylesheet" href="../dist/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="assets/app.css">
+    <link rel="stylesheet" type="text/css" href="css/frontierCalendar/jquery-frontier-cal-1.3.2.css" />
+    <link rel="stylesheet" type="text/css" href="css/colorpicker/colorpicker.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui/smoothness/jquery-ui-1.8.1.custom.css" />
+    <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link href="media/stylesheets/bootstrap.css" rel="stylesheet"/>
+    <link href="media/stylesheets/font-awesome.css" rel="stylesheet"/>
+    <link href="media/stylesheets/main.css" rel="stylesheet"/>
+    <link href="media/stylesheets/shCoreDefault.css" rel="stylesheet"/>
+
+
+
+<script type="text/javascript" src="js/jquery-core/jquery-1.4.2-ie-fix.min.js"></script>
+<script type="text/javascript">
+ var jQ_old = $.noConflict(true);
+</script>
+<script type="text/javascript" src="js/lib/jshashtable-2.1.js"></script>
+
+<script type="text/javascript" src="js/frontierCalendar/jquery-frontier-cal-1.3.2.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
+<script src="media/javascripts/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="js/typeahead.js"></script>
+<link type="text/css" rel="stylesheet" href="css/jquery.qtip.min.css" />
+<script type="text/javascript" src="js/jquery.qtip.min.js"></script>
+<script type="text/javascript" src="js/jquery.imagesloaded.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/google-code-prettify-lite/prettify.js"></script>
+<script src="bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script src="../dist/bootstrap-tagsinput.js"></script>
+<script src="../dist/bootstrap-tagsinput-angular.js"></script>
+<script src="assets/app.js"></script>
+<script src="xregexp-min.js"></script>
+<script src="unicode-base.js"></script>
+<script src="jquery.autosize.min.js"></script>
+<!-- <script src="media/javascripts/zepto-1.0.js"></script> -->
+
+
+
+
+</head>
+
+<body style="background-color: #aaaaaa;">
+
+<!-- Some CSS for our example. (Not required for calendar plugin. Used for example.)-->
+<style type="text/css" media="screen">
+/*
+Default font-size on the default ThemeRoller theme is set in ems, and with a value that when combined 
+with body { font-size: 62.5%; } will align pixels with ems, so 11px=1.1em, 14px=1.4em. If setting the 
+body font-size to 62.5% isn't an option, or not one you want, you can set the font-size in ThemeRoller 
+to 1em or set it to px.
+http://osdir.com/ml/jquery-ui/2009-04/msg00071.html
+*/
+
+body { font-size: 62.5%; }
+.shadow {
+	-moz-box-shadow: 3px 3px 4px #aaaaaa;
+	-webkit-box-shadow: 3px 3px 4px #aaaaaa;
+	box-shadow: 3px 3px 4px #aaaaaa;
+	/* For IE 8 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#aaaaaa')";
+	/* For IE 5.5 - 7 */
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#aaaaaa');
+}
+/*input {
+    border: none;
+    background: transparent;
+}
+*/
+textarea:focus, input:focus{
+    outline: 0!important;
+
+}
+
+
+.qtip-light
+{
+ background: none!important;
+}
+
+    textarea {
+  outline: none!important;
+  resize: none;
+  border: none;
+  opacity:1!important;
+}
+
+
+</style>
+
+<script type="text/javascript">
+
+
+
+
+$(document).ready(function(){	
+
+$('#textarea1').autosize();
+
+
+$('.JFrontierCal-Day-Cell').qtip({
+
+
+ // Grab some elements to apply the tooltip to
+
+
+    overwrite: false,
+    content: {
+       text: $('#textarea1')
+       //text: '<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" placeholder="Add tags" />'
+    },  
+
+    show: {
+        event: 'click'
+    },
+        hide: {
+        event: 'unfocus'
+
+    },
+        style: {
+        classes: 'qtip-light qtip-shadow',
+        // width: 200,
+        // height: 200,
+
+    },
+        position: {
+        my: 'center center',  // Position my top left...
+        at: 'center center', // at the bottom right of...
+        target: 'event' // my target
+    },
+    events: {
+        render: function(event, api) {
+        	var words = [
+"макароны",
+"сыр",
+"клубника",
+"хлеб",
+"овсянка",
+"мясо",
+"печеньки",
+"рыба",
+"курага",
+"манты",
+"апельсины",
+"арбузы",
+"устрицы",
+'abc',
+'ooo',
+'good' ];
+            var content = api.elements.content;
+            console.log(content)
+            content.find(':first-child').textcomplete([
+    // { // emoji strategy google google google github apple 
+    //     match: /\B:([\-+\w]*)$/,
+    //     search: function (term, callback) {
+    //         callback($.map(emojies, function (emoji) {
+    //             return emoji.indexOf(term) === 0 ? emoji : null;
+    //         }));
+    //     },
+    //     template: function (value) {
+    //         return '&lt;img src="media/images/emoji/' + value + '.png"&gt;&lt;/img&gt;' + value;
+    //     },
+    //     replace: function (value) {
+    //         return ':' + value + ': ';
+    //     },
+    //     index: 1,
+    //     maxCount: 5
+    // },
+    { // tech companies
+        match: /(\s|\n)([a-zA-Zа-яА-ЯёЁ]{2,})$/,
+        search: function (term, callback) {
+            callback($.map(words, function (word) {
+                return word.indexOf(term) === 0 ? word : null;
+            }));
+        },
+        replace: function (word) {
+            return '$1' + word + ' ';
+        }
+    }
+])
+            //'add', 'some tag'
+            //content.tagsinput('ssss');
+ 
+        }
+    }
+
+
+});
+
+
+
+
+});
+
+jQ_old(document).ready(function(){	
+
+	var clickDate = "";
+	var clickAgendaItem = "";
+	
+	/**
+	 * Initializes calendar with current year & month
+	 * specifies the callbacks for day click & agenda item click events
+	 * then returns instance of plugin object
+	 */
+	var jfcalplugin = jQ_old("#mycal").jFrontierCal({
+		date: new Date(),
+		dayClickCallback: myDayClickHandler,
+		// agendaClickCallback: myAgendaClickHandler,
+		// agendaDropCallback: myAgendaDropHandler,
+		// agendaMouseoverCallback: myAgendaMouseoverHandler,
+		// applyAgendaTooltipCallback: myApplyTooltip,
+		// agendaDragStartCallback : myAgendaDragStart,
+		// agendaDragStopCallback : myAgendaDragStop,
+		// dragAndDropEnabled: true
+	}).data("plugin");
+	
+	
+
+	/**
+	 * Make the day cells roughly 3/4th as tall as they are wide. this makes our calendar wider than it is tall. 
+	 */
+	jfcalplugin.setAspectRatio("#mycal",0.75);
+
+	/**
+	 * Called when user clicks day cell
+	 * use reference to plugin object to add agenda item
+	 */
+	function myDayClickHandler(eventObj){
+
+
+		// Get the Date of the day that was clicked from the event object
+		var date = eventObj.data.calDayDate;
+		var x = eventObj.data.x;
+		var y = eventObj.data.y;
+		// store date in our global js variable for access later
+		clickDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+		// open our add event dialog
+		//jQ_old(this).toggleClass('selected');
+		
+        console.log(x,y);
+        
+
+	};
+	
+
+	// /**
+	 // * Initialize previous month button
+	 // */
+	// jQ_old("#BtnPreviousMonth").button();
+	// jQ_old("#BtnPreviousMonth").click(function() {
+	// 	jfcalplugin.showPreviousMonth("#mycal");
+	// 	// update the jqeury datepicker value
+	// 	var calDate = jfcalplugin.getCurrentDate("#mycal"); // returns Date object
+	// 	var cyear = calDate.getFullYear();
+	// 	// Date month 0-based (0=January)
+	// 	var cmonth = calDate.getMonth();
+	// 	var cday = calDate.getDate();
+	// 	// jquery datepicker month starts at 1 (1=January) so we add 1
+	// 	jQ_old("#dateSelect").datepicker("setDate",cyear+"-"+(cmonth+1)+"-"+cday);
+	// 	return false;
+	// });
+	// /**
+	//  * Initialize next month button
+	//  */
+	// jQ_old("#BtnNextMonth").button();
+	// jQ_old("#BtnNextMonth").click(function() {
+	// 	jfcalplugin.showNextMonth("#mycal");
+	// 	// update the jqeury datepicker value
+	// 	var calDate = jfcalplugin.getCurrentDate("#mycal"); // returns Date object
+	// 	var cyear = calDate.getFullYear();
+	// 	// Date month 0-based (0=January)
+	// 	var cmonth = calDate.getMonth();
+	// 	var cday = calDate.getDate();
+	// 	// jquery datepicker month starts at 1 (1=January) so we add 1
+	// 	jQ_old("#dateSelect").datepicker("setDate",cyear+"-"+(cmonth+1)+"-"+cday);		
+	// 	return false;
+	// });
+	
+	// /**
+	//  * Initialize delete all agenda items button
+	//  */
+	// jQ_old("#BtnDeleteAll").button();
+	// jQ_old("#BtnDeleteAll").click(function() {	
+	// 	jfcalplugin.deleteAllAgendaItems("#mycal");	
+	// 	return false;
+	// });		
+
+
+
+	
+});
+
+
+// $('#toolbar').qtip({ // Grab some elements to apply the tooltip to
+//     content: {
+//         text: '<a href="">My common piece of text here</a> hhhhh llll '
+//     }
+// })
+</script>
+
+
+	<div id="tabs-2">
+
+		<div id="example" style="margin: auto; width:80%;">
+		
+		
+<!-- 		<div id="toolbar" class="ui-widget-header ui-corner-all" style="padding:3px; vertical-align: middle; white-space:nowrap; overflow: hidden;">
+			<button id="BtnPreviousMonth">Previous Month</button>
+			<button id="BtnNextMonth">Next Month</button>
+			&nbsp;&nbsp;&nbsp;
+			Date: <input type="text" id="dateSelect" size="20"/>
+			&nbsp;&nbsp;&nbsp;
+			<button id="BtnDeleteAll">Delete All</button>
+			
+		</div>
+
+		<br> -->
+
+		<!--
+		You can use pixel widths or percentages. Calendar will auto resize all sub elements.
+		Height will be calculated by aspect ratio. Basically all day cells will be as tall
+		as they are wide.
+		-->
+		<div id="mycal"></div>
+
+		</div>
+
+		<!-- debugging-->
+		<div id="calDebug"></div>
+
+		<!-- Add event modal form -->
+	
+
+		<p>&nbsp;</p>
+
+	</div><!-- end example tab -->
+
+<p>&nbsp;</p>
+<textarea id="textarea1" spellcheck="false"></textarea>
+<!-- <div id="container">
+<div id="all_inputs"></div>
+<input id="ui" style="bottom:0; position:relative"></input>
+</div> -->
+<!--     // <script src="bower_components/angular/angular.min.js"></script>
+    // <script src="bower_components/google-code-prettify-lite/prettify.js"></script>
+    // <script src="bootstrap-2.3.2/js/bootstrap.min.js"></script>
+    // <script src="../dist/bootstrap-tagsinput.js"></script>
+    // <script src="../dist/bootstrap-tagsinput-angular.js"></script>
+    
+    // <script src="assets/app.js"></script> -->
+<script src="http://yuku-t.com/jquery-overlay/jquery.overlay.js"></script>
+<script src="jquery.textcomplete.js"></script>
+<script src="media/javascripts/emoji.js"></script>
+<!-- <script src="media/javascripts/shCore.js"></script>
+<script src="media/javascripts/main.js"></script> -->
+</body>
+</html>

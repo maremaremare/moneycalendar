@@ -1,0 +1,665 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Frontier JQuery Calendar</title>
+    <link rel="stylesheet" href="static/bootstrap-2.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/bootstrap-2.3.2/css/docs.css">
+    <link rel="stylesheet" href="static/assets/app.css">
+    <link rel="stylesheet" type="text/css" href="static/css/frontierCalendar/jquery-frontier-cal-1.3.2.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/colorpicker/colorpicker.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/jquery-ui/redmond/jquery-ui-1.10.3.custom.css" />
+    <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link href="static/media/stylesheets/bootstrap.css" rel="stylesheet" />
+    <link href="static/media/stylesheets/font-awesome.css" rel="stylesheet" />
+    <link href="static/media/stylesheets/main.css" rel="stylesheet" />
+    <link href="static/media/stylesheets/shCoreDefault.css" rel="stylesheet" />
+
+
+
+    <script type="text/javascript" src="static/js/jquery-core/jquery-1.4.2-ie-fix.min.js"></script>
+    <script type="text/javascript">
+    var jQ_old = $.noConflict(true);
+    </script>
+    <script type="text/javascript" src="static/js/lib/jshashtable-2.1.js"></script>
+
+    <script type="text/javascript" src="static/js/frontierCalendar/jquery-frontier-cal-1.3.2.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
+    <script src="static/media/javascripts/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="static/js/typeahead.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/css/jquery.qtip.css" />
+    <script type="text/javascript" src="static/js/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="static/js/jquery.imagesloaded.min.js"></script>
+    <script src="static/bower_components/angular/angular.min.js"></script>
+    <script src="static/bower_components/google-code-prettify-lite/prettify.js"></script>
+    <script src="static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+    <script src="static/assets/app.js"></script>
+    <script src="static/xregexp-min.js"></script>
+    <script src="static/unicode-base.js"></script>
+    <script src="static/jquery.autosize.min.js"></script>
+    <!-- <script src="media/javascripts/zepto-1.0.js"></script> -->
+
+
+
+
+</head>
+
+<body >
+
+    <!-- Some CSS for our example. (Not required for calendar plugin. Used for example.)-->
+    <style type="text/css" media="screen">
+    /*
+Default font-size on the default ThemeRoller theme is set in ems, and with a value that when combined 
+with body { font-size: 62.5%; } will align pixels with ems, so 11px=1.1em, 14px=1.4em. If setting the 
+body font-size to 62.5% isn't an option, or not one you want, you can set the font-size in ThemeRoller 
+to 1em or set it to px.
+http://osdir.com/ml/jquery-ui/2009-04/msg00071.html
+*/
+    body {
+        font-size: 62.5%;
+    }
+    .shadow {
+        -moz-box-shadow: 3px 3px 4px #aaaaaa;
+        -webkit-box-shadow: 3px 3px 4px #aaaaaa;
+        box-shadow: 3px 3px 4px #aaaaaa;
+        /* For IE 8 */
+        -ms-filter:"progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#aaaaaa')";
+        /* For IE 5.5 - 7 */
+        filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#aaaaaa');
+    }
+    /*input {
+    border: none;
+    background: transparent;
+}
+*/
+    textarea:focus, input:focus {
+        outline: none!important;
+    }
+    .qtip-light {
+        background: none!important;
+    }
+    textarea {
+        outline: none!important;
+        resize: horizontal;
+        border: none;
+        opacity:1!important;
+        color:black!important;
+    }
+    .JFrontierCal-Day-Cell {
+    	font-size:40px!important;
+    	vertical-align: bottom!important;
+    }
+    </style>
+
+    <script type="text/javascript">
+clickData = {}
+
+
+
+    $(document).ready(function() {
+$.ajaxSetup({ 
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                     break;
+                 }
+             }
+         }
+         return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+     } 
+});
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    var clickDate = "";
+        var clickAgendaItem = "";
+
+        /**
+         * Initializes calendar with current year & month
+         * specifies the callbacks for day click & agenda item click events
+         * then returns instance of plugin object
+         */
+        var jfcalplugin = jQ_old("#mycal").jFrontierCal({
+            date: new Date(),
+            dayClickCallback: myDayClickHandler,
+            // agendaClickCallback: myAgendaClickHandler,
+            // agendaDropCallback: myAgendaDropHandler,
+            // agendaMouseoverCallback: myAgendaMouseoverHandler,
+            // applyAgendaTooltipCallback: myApplyTooltip,
+            // agendaDragStartCallback : myAgendaDragStart,
+            // agendaDragStopCallback : myAgendaDragStop,
+            // dragAndDropEnabled: true
+        }).data("plugin");
+
+
+
+        /**
+         * Make the day cells roughly 3/4th as tall as they are wide. this makes our calendar wider than it is tall.
+         */
+        jfcalplugin.setAspectRatio("#mycal", 0.75);
+
+        /**
+         * Called when user clicks day cell
+         * use reference to plugin object to add agenda item
+         */
+
+        function myDayClickHandler(eventObj) {
+
+
+            // Get the Date of the day that was clicked from the event object
+            var date = eventObj.data.calDayDate;
+            var x = eventObj.data.x;
+            var y = eventObj.data.y;
+            // store date in our global js variable for access later
+            date = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            clickData.date = date;
+            clickData.x = x;
+            clickData.y = y;
+            console.log(clickData, 'its clickdata')
+            // open our add event dialog
+            //jQ_old(this).toggleClass('selected');
+            //this.qtip('api').elements.content.html('ssss');
+            console.log(x, y);
+
+        };
+
+
+console.log(clickData)
+        $.fn.setCursorPosition = function(pos) {
+            this.each(function(index, elem) {
+                if (elem.setSelectionRange) {
+                    elem.setSelectionRange(pos, pos);
+                } else if (elem.createTextRange) {
+                    var range = elem.createTextRange();
+                    range.collapse(true);
+                    range.moveEnd('character', pos);
+                    range.moveStart('character', pos);
+                    range.select();
+                }
+            });
+            return this;
+        };
+
+       
+
+         function updateSumm(val) {
+         	match_array = val.match(/\d+\n|\d+$/g)
+         	summ = 0
+         	if (!match_array) {
+         		summ = 0
+         	}
+         	 for (var i=0;i<match_array.length;i++)
+{
+summ+=parseInt(match_array[i]);
+console.log(summ)
+}
+
+         	$('#summ').html(summ)
+
+         }
+        //var content = api.elements.content;
+                    var words = [
+                        "макароны",
+                        "сыр",
+                        "клубника",
+                        "хлеб",
+                        "овсянка",
+                        "мясо",
+                        "печеньки",
+                        "рыба",
+                        "курага",
+                        "манты",
+                        "апельсины",
+                        "арбузы",
+                        "устрицы",
+                        "чай",
+                        "финики",
+                        "земляника",
+                        "ежевика",
+                        "перец",
+                        "нектарины",
+                        "груши",
+                        "хурма",
+                        "яблоки",
+                        "равиоли",
+                        "селедка",
+                        "инжир",
+                        "торт",
+                        "лимоны",
+                        "жевачка",
+                        "дорблю",
+
+
+                        'abc',
+                        'ooo',
+                        'good'
+                    ];
+
+                    var categories = [
+                        "молочка",
+                        "крупы",
+                        "хлеб",
+                        "мясо",
+                        "овсянка",
+                        "мясо",
+                        "рыба",
+                        "cладости",
+                        "фрукты",
+                        "овощи",
+                        "бакалея"
+                    ];
+                    $('#textarea1').textcomplete([
+
+                        { // продукт
+                            match: /(^|\n)([a-zA-Zа-яА-ЯёЁ]{2,})$/,
+                            search: function(term, callback) {
+                                callback($.map(words, function(word) {
+                                    return word.indexOf(term) === 0 ? word : null;
+                                }));
+                            },
+                            replace: function(word) {
+                                // return word
+                                if (word) {
+                                    return ['$1' + word + '  (', ')  ']
+                                } else {
+                                    return word
+                                }
+                                '$1' + word + '  ';
+                            }
+                        },
+
+                        { // категория
+                            match: /(\()([a-zA-Zа-яА-ЯёЁ]{1,})$/,
+                            search: function(term, callback) {
+                                callback($.map(categories, function(word) {
+                                    return word.indexOf(term) === 0 ? word : null;
+                                }));
+                            },
+                            replace: function(word) {
+                                return '$1' + word; //'$1(' + word+ ')' ;
+                            }
+                        }
+
+                        // ]);
+                    ]);
+
+var summ = 0;
+        $('#textarea1').keydown(function(e) {
+
+            var content = this.value;
+            var lastLine = content.substr(content.lastIndexOf("\n") + 1);
+
+            
+            
+            if (e.keyCode == 8) {
+            	updateSumm(content)
+            	console.log('backspace')
+            }
+
+
+            if (e.keyCode == 13 && !e.shiftKey) {
+
+                if (/^[a-zA-Zа-яА-ЯёЁ]+\s\s\([a-zA-Zа-яА-ЯёЁ]+\)\s\s\d+$/.test(lastLine)) {
+                    lineValue = parseInt(lastLine.match(/\d+$/)[0])
+                    console.log(lineValue);
+                    summ = summ + lineValue
+                    $('#summ').html(summ)
+                    //uodateSumm(content)
+                    console.log('test passed')
+                } else if (/^[a-zA-Zа-яА-ЯёЁ]+$/.test(lastLine) && !($('.textcomplete-item').is(':visible'))) {
+                    e.preventDefault();
+                    content = content + '  ()  '
+                    len = content.length
+                    $('#textarea1').val(content).setCursorPosition(len - 3);
+                    //this.val(content).setCursorPosition(len - 3);
+
+                } else if (/^[a-zA-Zа-яА-ЯёЁ]+\s\d+$/.test(lastLine)) {
+                    e.preventDefault();
+                    // lastLine = lastLine.replace(' ', '()')
+                    // prevContent = content.substring(blabla)
+                    // updated_content = prevContent + lastLine
+                    // len = updated_content.length
+                    // digits = lastLine.match(/d+$/)
+                    // $('#textarea1').val(updated_content).setCursorPosition(len - digits.length - 2);
+                    //this.val(content).setCursorPosition(len - 3);
+
+                } else if (/^[a-zA-Zа-яА-ЯёЁ]+\s\s\([a-zA-Zа-яА-ЯёЁ]+\)\s\s$/.test(lastLine) && !($('.textcomplete-item').is(':visible'))) {
+                    e.preventDefault();
+                    len = content.length
+                   $('#textarea1').val(content).setCursorPosition(len);
+                    //this.val(content).setCursorPosition(len);
+
+                } else
+
+                {
+                    e.preventDefault();
+                    console.log('enter pressed')
+                    //                     if (browserIsIE) {
+                    //     var range= element.createTextRange();
+                    //     range.collapse(false);
+                    //     range.select();
+                    // } else {
+
+                    // }
+                }
+
+            }
+        });
+
+
+
+function updateWeekSum(clickData, summ){
+
+	elem = $('#summs').children().eq(clickData.y-1)
+	console.log($('#summs').children().eq(1), 'sumchilds')
+	newHtml = parseInt(elem.html())+parseInt(summ)
+	elem.html(newHtml)
+}
+
+
+function updateMonthSum(){
+	var monthSum = 0
+	$('#summs').children().each(function(){
+		monthSum += parseInt($(this).html())
+		console.log($(this).html())		
+	})
+
+	$('#monthSum').html(monthSum);
+
+}
+
+function sendDataToDjango(summ, text, clickData){
+  var csrftoken = getCookie('csrftoken');
+
+ jQuery.ajax({
+                url:    '',
+                type: 'POST',
+                data: {'date': clickData.date, 'summ':summ, 'text':text, 'csrfmiddlewaretoken':csrftoken },
+         success: function(data) {
+console.log(data)
+                         
+                  },
+                async:   false,
+              });   
+    //});
+//});
+     //$("#form").submit()
+
+}
+
+
+        $('#textarea1').autosize().overlay([{
+                match: /\s\s\(([a-zA-Zа-яА-ЯёЁ]+)\)\s\s/g,
+                css: {
+                    'background-color': 'blue'
+                }
+            },
+
+            {
+                match: /\.\d+\./g, ///(\d+)/g,
+                css: {
+                    'background-color': 'red'
+                }
+
+            }
+        ]);;
+
+
+        $('.JFrontierCal-Day-Cell').qtip({
+
+
+            // Grab some elements to apply the tooltip to
+
+
+            
+            overwrite: true,
+            content: {
+                text: $('#holder').clone()
+                //text: '<input type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" data-role="tagsinput" placeholder="Add tags" />'
+            },
+
+            show: {
+                event: 'click',
+
+
+            },
+            hide: {
+                event: 'unfocus'
+
+            },
+            style: {
+                classes: 'qtip-light qtip-shadow',
+                style: 'h'
+                //width: $('#textarea').attr('width')
+                // width: 200,
+                // height: 200,
+
+            },
+            position: {
+                my: 'center center', // Position my top left...
+                at: 'center center', // at the bottom right of...
+                target: 'event' // my target
+            },
+            events: {
+                hide: function(event, api) {
+                     console.log('treying to hide');
+                     var summ = $('div#summ').html()
+                     var text = $('#textarea1').val()
+          
+                     console.log(summ)
+                     console.log(api.target)
+                     if (summ) {
+                     api.target.html(summ)
+                     updateWeekSum(clickData, summ)
+                     updateMonthSum()
+                     }
+
+                     if (summ && text) {
+                        sendDataToDjango(summ, text, clickData)
+                     }
+                     //daycell = $('.JFrontierCal-Day-Cell')
+                     //console.log(daycell)//$('')
+
+                },
+                show: function(event, api) {
+                    console.log('trying to show');
+                    console.log(clickData, 'it worked');
+                    //bindkeydown()
+                    console.log(api.elements.content);
+                    $('#textarea1').val('');
+                    $('#summ').html('');
+                    $('.textoverlay').html('');
+                    api.elements.content.html($('#holder'));
+                    
+
+                },
+
+                render: function(event, api) {
+                    var words = [
+                        "макароны",
+                        "сыр",
+                        "клубника",
+                        "хлеб",
+                        "овсянка",
+                        "мясо",
+                        "печеньки",
+                        "рыба",
+                        "курага",
+                        "манты",
+                        "апельсины",
+                        "арбузы",
+                        "устрицы",
+                        "чай",
+                        "финики",
+                        "земляника",
+                        "ежевика",
+                        "перец",
+                        "нектарины",
+                        "груши",
+                        "хурма",
+                        "яблоки",
+                        "равиоли",
+                        "селедка",
+                        "инжир",
+                        "торт",
+                        "лимоны",
+                        "жевачка",
+                        "дорблю",
+
+
+                        'abc',
+                        'ooo',
+                        'good'
+                    ];
+
+                    var categories = [
+                        "молочка",
+                        "крупы",
+                        "хлеб",
+                        "мясо",
+                        "овсянка",
+                        "мясо",
+                        "рыба",
+                        "cладости",
+                        "фрукты",
+                        "овощи",
+                        "бакалея"
+                    ];
+
+                    var content = api.elements.content;
+					  var maxZ = Math.max.apply(null, 
+					    $.map($('body > *'), function(e,n) {
+					      if ($(e).css('position') != 'static')
+					        return parseInt($(e).css('z-index')) || 1;
+					  }));
+                    var z = $('.qtip-content').css('z-index');
+                    $('.dropdown-menu').css('z-index', 15003);
+
+                    //console.log(content)
+                    content.find('textarea').textcomplete([
+
+                        { // продукт
+                            match: /(^|\n)([a-zA-Zа-яА-ЯёЁ]{2,})$/,
+                            search: function(term, callback) {
+                                callback($.map(words, function(word) {
+                                    return word.indexOf(term) === 0 ? word : null;
+                                }));
+                            },
+                            replace: function(word) {
+                                // return word
+                                if (word) {
+                                    return ['$1' + word + '  (', ')  ']
+                                } else {
+                                    return word
+                                }
+                                '$1' + word + '  ';
+                            }
+                        },
+
+                        { // категория
+                            match: /(\()([a-zA-Zа-яА-ЯёЁ]{1,})$/,
+                            search: function(term, callback) {
+                                callback($.map(categories, function(word) {
+                                    return word.indexOf(term) === 0 ? word : null;
+                                }));
+                            },
+                            replace: function(word) {
+                                return '$1' + word; //'$1(' + word+ ')' ;
+                            }
+                        }
+
+                        // ]);
+                    ])
+
+
+                }
+            }
+
+
+        }, clickData);
+
+
+    });
+
+   
+    </script>
+
+{% if user.is_anonymous %}
+{% include "login_form.html" %}
+{% endif %}
+
+    <div id="tabs-2">
+
+        <div id="example" style="margin: auto; width:80%;">
+
+            <div id="mycal"></div>
+
+        </div>
+
+        <!-- debugging-->
+        <div id="calDebug"></div>
+
+        <!-- Add event modal form -->
+
+
+        <p>&nbsp;</p>
+
+    </div>
+    <!-- end example tab -->
+
+    <p>&nbsp;</p>
+
+    <div id="summs">
+    <div class="sum">0</div>
+    <div class="sum">0</div>
+    <div class="sum">0</div>
+    <div class="sum">0</div>
+    <div class="sum">0</div>
+    </div>
+    <div id="monthSumHolder">Итого за месяц: <div id="monthSum">0</div></div> 
+    <div id="holder">
+        <textarea id="textarea1" class="textarea1" spellcheck="false"></textarea>
+        <div id="summ" style="background-color:white"></div>
+    </div>
+    <form id = "form" action="" method="post" enctype="application/x-www-form-urlencoded">
+    {% csrf_token %}
+    {{ form.text }}
+    {{ form.date }}
+    {{ form.summ }}
+    </form>
+    <!-- <div id="textarea1" class="editable">hkjhkjhkjhkjhkj</div> -->
+    <script src="static/jquery.overlay.js"></script>
+    <script src="static/jquery.textcomplete.js"></script>
+    <script src="static/media/javascripts/emoji.js"></script>
+
+</body>
+
+</html>

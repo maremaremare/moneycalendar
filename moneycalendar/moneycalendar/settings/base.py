@@ -3,7 +3,10 @@
 
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
-from photologue import PHOTOLOGUE_TEMPLATE_DIR
+
+from registration_defaults.settings import *
+
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/'
 
 
 ########## PATH CONFIGURATION
@@ -127,7 +130,7 @@ TEMPLATE_LOADERS = (
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs
 TEMPLATE_DIRS = (
-    normpath(join(SITE_ROOT, 'templates')),
+    normpath(join(SITE_ROOT, 'moneycalendar/templates')),
 )
 ########## END TEMPLATE CONFIGURATION
 
@@ -156,6 +159,7 @@ ROOT_URLCONF = '%s.urls' % SITE_NAME
 ########## APP CONFIGURATION
 DJANGO_APPS = (
     # Default Django apps:
+    "registration_defaults",
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -168,18 +172,20 @@ DJANGO_APPS = (
     # Admin panel and documentation:
 
     'django.contrib.admin',
+    'registration'
     # 'django.contrib.admindocs',
 )
 
 THIRD_PARTY_APPS = (
 
-    'gunicorn',
+    # 'gunicorn',
     # Database migration helpers:
-    'south',
+    'south', 'tastypie',
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+    'calend',
 
 )
 
