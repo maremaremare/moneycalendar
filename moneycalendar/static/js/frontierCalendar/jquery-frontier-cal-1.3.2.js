@@ -846,6 +846,8 @@
             var currentYearNum = this.getCurrentYear();
             // month number for this date
             var currentMonthNum = this.getCurrentMonth();
+            //нормальное представление месяца
+            var currentMonthDisplay = currentMonthNum + 1;
             // day number for this date
             var currentDayNum = today.getDate();
             // number of days in this month
@@ -859,32 +861,76 @@
             // Date object set to last day of the month
             var dtLast = new Date(this.getCurrentYear(), this.getCurrentMonth(), daysInCurrentMonth, 0, 0, 0, 0);
             // index within the week of the first day of the month
-            var firstDayWkIndex = dtFirst.getDay()-1;
+            var firstDayWkIndex = dtFirst.getDay()-1; // -1 чтобы первым днем был понедельник
+
+             if (firstDayWkIndex == -1){ //исправляем отрицательный индекс воскресения на шестой
+            	firstDayWkIndex = 6
+            }
             // inidex within the week of the last day of the month
-            var lastDayWkIndex = dtLast.getDay();
+            var lastDayWkIndex = dtLast.getDay()-1; // -1 чтобы первым днем был понедельник
+
+
+            if (lastDayWkIndex == -1){ //исправляем отрицательный индекс воскресения на шестой
+            	lastDayWkIndex = 6 
+            }
 
             var showTodayStyle = ((today.getFullYear() == currentYearNum && today.getMonth() == currentMonthNum) ? true : false);
 
+            var correctedFirstDayWkIndex = firstDayWkIndex
             //get data from django
+
             var firstDayPrevMonth = (daysInPreviousMonth - firstDayWkIndex) + 1;
+            console.log(firstDayPrevMonth, daysInPreviousMonth, firstDayWkIndex)
             var firstDate;
             var lastDate;
 
             function getZeroStr(a) {
             	return ('0' + (parseInt(a))).slice(-2);
             }
+            var f_year;
+            var f_month;
+            var f_day;
+            var l_year;
+            var l_month;
+            var l_day;
 
-            if (daysInPreviousMonth != 0) {
-            	firstDate = parseInt(currentYearNum)+'-'+getZeroStr(currentMonthNum)+'-'+getZeroStr(firstDayPrevMonth);
+            if (daysInPreviousMonth != 0) { //если есть дни из прошлого месяца
+
+
+            	f_year = currentYearNum
+            	f_month = currentMonthDisplay - 1 //это ПРОШЛЫЙ месяц
+            	if (f_month == 12) { //если это прошлый декабрь
+                f_year = currentYearNum-1
+            	}
+            	f_day = firstDayPrevMonth
+
+            	//firstDate = parseInt(currentYearNum)+'-'+getZeroStr(currentMonthNum)+'-'+getZeroStr(firstDayPrevMonth);
             } else {
-            	firstDate = parseInt(currentYearNum)+'-'+getZeroStr(currentMonthNum+1)+'-'+'01';
+            	f_year = currentYearNum;
+            	f_month = currentMonthDisplay;
+            	f_day = 1
             }
             
-            if (daysInNextMonth != 0) {
-                lastDate = parseInt(currentYearNum)+'-'+getZeroStr(currentMonthNum+2)+'-'+getZeroStr(daysInNextMonth-1);
+             firstDate = parseInt(f_year)+'-'+getZeroStr(f_month)+'-'+getZeroStr(f_day);
+
+            if (daysInNextMonth != 0) {//если есть дни из будущего месяца
+
+            	l_year = currentYearNum
+            	l_month = currentMonthDisplay + 1 
+            	if (l_month == 13) { 
+            		l_month = 1
+            		l_year = currentYearNum+1
+            	}
+            	l_day = 6 - lastDayWkIndex;
+
             } else {
-            	lastDate =  parseInt(currentYearNum)+'-'+getZeroStr(currentMonthNum+1)+'-'+parseInt(daysInCurrentMonth);
+            	l_year = currentYearNum
+            	l_month = currentMonthDisplay
+            	l_day = daysInCurrentMonth
+            	
             }
+
+            lastDate = parseInt(l_year)+'-'+getZeroStr(l_month)+'-'+getZeroStr(l_day);
 
             var answer;
             var dates_array=[];
