@@ -423,6 +423,7 @@
                 }
                 return deferred;
                 function processPrefetchData(data) {
+                	
                     var filteredData = o.filter ? o.filter(data) : data, processedData = that._processData(filteredData), itemHash = processedData.itemHash, adjacencyList = processedData.adjacencyList;
                     if (that.storage) {
                         that.storage.set(keys.itemHash, itemHash, o.ttl);
@@ -433,14 +434,19 @@
                     that._mergeProcessedData(processedData);
                 }
             },
-            _transformDatum: function(datum) {
+            _transformDatum: function(datum, cat) {
+
                 var value = utils.isString(datum) ? datum : datum[this.valueKey], tokens = datum.tokens || utils.tokenizeText(value), item = {
                     value: value,
+ 
                     tokens: tokens
                 };
+                
                 if (utils.isString(datum)) {
                     item.datum = {};
                     item.datum[this.valueKey] = datum;
+                    item.datum['category'] = cat;
+
                 } else {
                     item.datum = datum;
                 }
@@ -450,12 +456,14 @@
                 item.tokens = utils.map(item.tokens, function(token) {
                     return token.toLowerCase();
                 });
+                
                 return item;
             },
             _processData: function(data) {
                 var that = this, itemHash = {}, adjacencyList = {};
                 utils.each(data, function(i, datum) {
-                    var item = that._transformDatum(datum), id = utils.getUniqueId(item.value);
+                
+                    var item = that._transformDatum(datum,data), id = utils.getUniqueId(item.value);
                     itemHash[id] = item;
                     utils.each(item.tokens, function(i, token) {
                         var character = token.charAt(0), adjacency = adjacencyList[character] || (adjacencyList[character] = [ id ]);
@@ -509,7 +517,7 @@
                 return suggestions;
             },
             initialize: function() {
-                console.log('TYPEAHEAD');
+            	console.log('typeahead')
                 var deferred;
                 this.local && this._processLocalData(this.local);
                 this.transport = this.remote ? new Transport(this.remote) : null;
@@ -534,7 +542,7 @@
                 function processRemoteData(data) {
                     suggestions = suggestions.slice(0);
                     utils.each(data, function(i, datum) {
-                        var item = that._transformDatum(datum), isDuplicate;
+                        var item = that._transformDatum(datum, data), isDuplicate;
                         isDuplicate = utils.some(suggestions, function(suggestion) {
                             return item.value === suggestion.value;
                         });
@@ -984,7 +992,7 @@
                     this.inputView.setInputValue(suggestion.value);
                     byClick ? this.inputView.focus() : e.data.preventDefault();
                     byClick && utils.isMsie() ? utils.defer(this.dropdownView.close) : this.dropdownView.close();
-                    this.eventBus.trigger("selected", suggestion.datum, suggestion.dataset);
+                    this.eventBus.trigger("selected", e, suggestion.datum, suggestion.dataset);
                 }
             },
             _getSuggestions: function() {

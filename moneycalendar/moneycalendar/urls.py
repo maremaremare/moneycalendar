@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from calend.api import DayResource, UserResource
+from calend.api import DayResource, UserResource, CategoryResource, EntryResource, ExpenseResource
 
 from django.views.generic import TemplateView
 
@@ -13,6 +13,9 @@ admin.autodiscover()
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
 v1_api.register(DayResource())
+v1_api.register(CategoryResource())
+v1_api.register(EntryResource())
+v1_api.register(ExpenseResource())
 
 urlpatterns = patterns('',
     url(r'^$', index),

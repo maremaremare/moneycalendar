@@ -1,117 +1,103 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block css %} {{ block.super }} {# includes previous content in block #} {# view-specific imports here #}
+<link rel="stylesheet" href="static/bootstrap-2.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="static/bootstrap-2.3.2/css/docs.css">
+<link rel="stylesheet" href="static/assets/app.css">
+<link rel="stylesheet" href="static/css/newinterface.css">
+<link rel="stylesheet" type="text/css" href="static/css/frontierCalendar/jquery-frontier-cal-1.3.2.css" />
+<link rel="stylesheet" type="text/css" href="static/css/colorpicker/colorpicker.css" />
+<link rel="stylesheet" type="text/css" href="static/css/jquery-ui/redmond/jquery-ui-1.10.3.custom.css" />
+<link href="static/media/stylesheets/bootstrap.css" rel="stylesheet" />
+<link href="static/media/stylesheets/font-awesome.css" rel="stylesheet" />
+<link href="static/media/stylesheets/main.css" rel="stylesheet" />
+<link href="static/media/stylesheets/shCoreDefault.css" rel="stylesheet" />
+<link type="text/css" rel="stylesheet" href="static/css/jquery.qtip.css" />{% endblock %} {% block js %} {{ block.super }} 
 
 
-{% block css %}
-
-    {{ block.super }} {# includes previous content in block #}
-    {# view-specific imports here #}
-    <link rel="stylesheet" href="static/bootstrap-2.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/bootstrap-2.3.2/css/docs.css">
-    <link rel="stylesheet" href="static/assets/app.css">
-    <link rel="stylesheet" type="text/css" href="static/css/frontierCalendar/jquery-frontier-cal-1.3.2.css" />
-    <link rel="stylesheet" type="text/css" href="static/css/colorpicker/colorpicker.css" />
-    <link rel="stylesheet" type="text/css" href="static/css/jquery-ui/redmond/jquery-ui-1.10.3.custom.css" />
-  {#   <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" /> #}
-    <link href="static/media/stylesheets/bootstrap.css" rel="stylesheet" />
-    <link href="static/media/stylesheets/font-awesome.css" rel="stylesheet" />
-    <link href="static/media/stylesheets/main.css" rel="stylesheet" />
-    <link href="static/media/stylesheets/shCoreDefault.css" rel="stylesheet" />
-    <link type="text/css" rel="stylesheet" href="static/css/jquery.qtip.css" />
-{% endblock %}
-
-{% block js %}
-    {{ block.super }} {# includes previous content in block #}
-    {# view-specific imports here #}
-
-
-    <script type="text/javascript" src="static/js/jquery-core/jquery-1.4.2-ie-fix.min.js"></script>
-    <script type="text/javascript">
-    var jQ_old = $.noConflict(true);
-    </script>
-    <script type="text/javascript" src="static/js/lib/jshashtable-2.1.js"></script>
-
-    <script type="text/javascript" src="static/js/frontierCalendar/jquery-frontier-cal-1.3.2.js"></script>
-    <!-- <script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
-    <script src="static/media/javascripts/jquery-1.10.2.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script type="text/javascript" src="static/js/typeahead.js"></script>
-    <script src="static/bower_components/angular/angular.min.js"></script>
-    <script src="static/bower_components/google-code-prettify-lite/prettify.js"></script>
-    <script type="text/javascript" src="static/js/jquery.qtip.min.js"></script>
-    <script src="static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
-    <script src="static/assets/app.js"></script>
-    <script src="static/xregexp-min.js"></script>
-    <script src="static/unicode-base.js"></script>
-    <script src="static/jquery.autosize.min.js"></script>
-    <script src="static/js/content.js"></script>
-    <script src="static/jquery.overlay.js"></script>
-    <script src="static/jquery.textcomplete.js"></script>
-    <script src="static/media/javascripts/emoji.js"></script>
-    <script type="text/javascript" >
-	
-	var current_user_id = {{ user.id }}
-
+<script type="text/javascript" src="static/js/jquery-core/jquery-1.4.2-ie-fix.min.js"></script>
+<script type="text/javascript">
+var jQ_old = $.noConflict(true);
 </script>
-    <script src="static/js/my.js"></script>
+<script type="text/javascript" src="static/js/lib/jshashtable-2.1.js"></script>
+
+<script type="text/javascript" src="static/js/frontierCalendar/jquery-frontier-cal-1.3.2.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
+<script src="static/media/javascripts/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="static/js/typeahead.js"></script>
+<script type="text/javascript" src="static/js/newinterface.js"></script>
+<script src="static/bower_components/angular/angular.min.js"></script>
+<script src="static/bower_components/google-code-prettify-lite/prettify.js"></script>
+<script type="text/javascript" src="static/js/jquery.qtip.min.js"></script>
+<script src="static/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<script src="static/assets/app.js"></script>
+<script src="static/xregexp-min.js"></script>
+<script src="static/unicode-base.js"></script>
+<script src="static/jquery.autosize.min.js"></script>
+<script src="static/js/content.js"></script>
+<script src="static/js/hogan-2.0.0.js"></script>
+
+<script src="static/js/typeahead.js"></script>
+<script src="static/jquery.overlay.js"></script>
+<script src="static/jquery.textcomplete.js"></script>
+<script src="static/media/javascripts/emoji.js"></script>
+<script type="text/javascript">
+var current_user_id = {{  user.id  }}
+</script>
+<script src="static/js/my.js"></script>
 
 
-{% endblock %}
+{% endblock %} {% block content %} {% if user.is_authenticated %}
 
-{% block content %}
-{% if user.is_authenticated %}
+<div id="tabs-2">
 
-    <div id="tabs-2">
+    <div id="example" style="margin: auto; width:80%;">
 
-        <div id="example" style="margin: auto; width:80%;">
-
-            <div id="mycal"></div>
-
-        </div>
-
-        <!-- debugging-->
-        <div id="calDebug"></div>
-
-        <!-- Add event modal form -->
-
-
-        <p>&nbsp;</p>
+        <div id="mycal"></div>
 
     </div>
-    <!-- end example tab -->
+
+    <!-- debugging-->
+    <div id="calDebug"></div>
+
+    <!-- Add event modal form -->
+
 
     <p>&nbsp;</p>
 
-    <div id="summs">
-    <div class="sum">0</div>
-    <div class="sum">0</div>
-    <div class="sum">0</div>
-    <div class="sum">0</div>
-    <div class="sum">0</div>
-    </div>
-    <div id="monthSumHolder">Итого за месяц: <div id="monthSum">0</div></div> 
-    <div id="holder">
-        <textarea id="textarea1" class="textarea1" spellcheck="false"></textarea>
-        <div id="summ" style="background-color:white"></div>
-    </div>
-    <form id = "form" action="" method="post" enctype="application/x-www-form-urlencoded">
-    {% csrf_token %}
-    {{ form.text }}
-    {{ form.date }}
-    {{ form.summ }}
-    </form>
+</div>
+<!-- end example tab -->
 
-<hr>
-<div style="width: 300px; height:300px; border: 1 px black">
-    <ul>
-    <li>blabla</li>
-    <li>blabla</li>
-    <li>blabla</li>
-    <li>blabla</li>
-    <li>blabla</li>
-    <li>blabla</li>
+<p>&nbsp;</p>
 
+<div id="summs">
+</div>
+<div id="monthSumHolder">Итого за месяц:
+    <div id="monthSum">0</div>
 </div>
 
-    {% endif %}
+<form id="form" action="" method="post" enctype="application/x-www-form-urlencoded">
+    {% csrf_token %} {{ form.text }} {{ form.date }} {{ form.summ }}
+</form>
 
-    {% endblock %}
+<hr>
+<div id="cc"></div>
+
+<div id="cont">
+    <ul id="ulInput">
+
+
+        <div id="input-line">
+     
+            <input type="text" id="expenseInput" placeholder="расход">
+            <input type="text" id="categoryInput" placeholder="категория">
+            <span class="twitter-typeahead" style="margin-bottom: -10px; position: relative; display: inline-block; direction: ltr;">
+            <input type="text" id="summInput" placeholder="сумма" style="direction:ltr">   </span>
+            <div id="clearer" style="clear:both"></div>
+        </div>
+
+</ul>
+<div id="controls"><p id ="save">Сохранить (Ctrl+S)</p>  <a id ="clear" href="">Очистить</a><div id="summ"></div>
+</div>
+
+{% endif %} {% endblock %}
+

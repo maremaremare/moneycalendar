@@ -62,19 +62,6 @@
         return (this.match("^" + str) == str);
     }
 
-    /**
-     * An agenda object to store data for a single agenda item on the calendar.
-     *
-     * An agenda item may wrap weeks so it will have more than one <div/> element to render.
-     *
-     * @param title		- (String)  - The title to be displayed on the agenda <div/>. This is what users will see on
-     *								  the calendar agenda item along with the start and end dates.
-     * @param startDate - (Date)    - The date the agenda item starts.
-     * @param endDate   - (Date)    - The date the agenda item ends.
-     * @param allDay    - (boolean) - True if an all day event (do not show start time on agenda div element), false otherwise. False by default.
-     * @param hashData  - (Hashtable from jshashtable.js) - A Hashtable that contains all data for the agenda item.
-     */
-
 
     /**
      * One day cell in the calendar.
@@ -156,31 +143,31 @@
         }
 
         this.getSumm = function() {
-        	console.log(this.summ)
+        //	console.log(this.summ)
         	return this.summ;
         }
 
         this.updateWeekSum = function() {
         elem = $('#summs').children().eq(this.getYCoord() - 1)
         var newHtml;
-        console.log(elem)
+      //  console.log(elem)
         if (elem.html()) {
         	newHtml = parseInt(elem.html()) + parseInt(this.getSumm())
         } else {
         	newHtml = parseInt(this.getSumm())
         }
         
-        console.log(newHtml)
+       // console.log(newHtml)
         elem.html(newHtml)
-        console.log('updateWEEkSUUMMMWORKS')
+       // console.log('updateWEEkSUUMMMWORKS')
         }
 
         this.setValue = function(value) {
-        	this.textvalue = value;
+        	this.htmlvalue = value;
         }
 
         this.getValue = function() {
-        	return this.textvalue;
+        	return this.htmlvalue;
         }
 
         /**
@@ -287,7 +274,13 @@
         this.appendHtml = function(htmlData) {
             this.jqyObj.append(htmlData);
         };
+        /*
+        append li
+        */
 
+        this.appendLi = function(htmlData) {
+        	this.jqyObj.append($('<li>'+htmlData+'</li>'))
+        }
         /*
 		clear html
 		*/
@@ -342,8 +335,10 @@
                     calDayDate: this.date,
                     x: this.XCoord,
                     y: this.YCoord,
+                    html: this.htmlvalue,
                     text: this.textvalue,
-                    summ: this.summ
+                    summ: this.summ,
+                    summ_array: this.summ_array
                 },
                 handler
             );
@@ -641,6 +636,7 @@
             this.jqyObj.html(htmlData);
         };
 
+
         this.getHtml = function() {
             return this.jqyObj.html();
         };
@@ -880,7 +876,7 @@
             //get data from django
 
             var firstDayPrevMonth = (daysInPreviousMonth - firstDayWkIndex) + 1;
-            console.log(firstDayPrevMonth, daysInPreviousMonth, firstDayWkIndex)
+           // console.log(firstDayPrevMonth, daysInPreviousMonth, firstDayWkIndex)
             var firstDate;
             var lastDate;
 
@@ -935,22 +931,23 @@
             var answer;
             var dates_array=[];
 
-            var url = 'api/v1/day/?date__gt='+firstDate+'&date__lt='+lastDate;
+            var url = 'api/v1/entry/?date__gt='+firstDate+'&date__lt='+lastDate;
             jQuery.ajax({
                 url: url,
                 type: 'GET',
                 success: function(data) {
                     answer = data
+                  //  console.log(answer);
                 },
                 async: false,
             });
              len = answer.objects.length
      
-            for (i = 0; i<len; i++) {
+           // for (i = 0; i<len; i++) {
             	//console.log('baaa');
-                dates_array.push([answer.objects[i].date, answer.objects[i].summ, answer.objects[i].text])
+               // dates_array.push([answer.objects[i].date, answer.objects[i].summ, answer.objects[i].text])
             	//console.log(answer.objects[i].summ)
-            }
+            //}
 
             
 
@@ -995,18 +992,49 @@
 
 
            function setData(dt_str,calDayCell){
-           	            for (i=0; i<dates_array.length; i++) {
-                    if (dates_array[i][0] == dt_str) {
-                    	calDayCell.setHtml(dates_array[i][1])
-                    	calDayCell.setValue(dates_array[i][2])
-                    	calDayCell.setSumm(dates_array[i][1])
-                    	calDayCell.jqyObj.data("value", dates_array[i][2]);
-                    	calDayCell.updateWeekSum();
-                    	updateMonthSum()
+           	            s_a = []
+           	            var summ_array = {}
+           	            var summ = 0;
+           	            var html = ''
+           	            for (var i in answer.objects) {
+                    if (answer.objects[i].date == dt_str) {
+                    	//console.log(answer.objects[i])
+
+                    	s_a.push(parseInt(answer.objects[i].summ))
+
+                    	summ+=answer.objects[i].summ
+                    	str = answer.objects[i].expense.name+'  '+answer.objects[i].expense.category.name+'  '+answer.objects[i].summ
+                    	li = '<li class="expense"><div class="ddd">'+str+'</div></li>'
+
+                    	html+=li 
+
+                    	//calDayCell.setValue(str)
+                    	//calDayCell.jqyObj.data("value", str);
+
                     }
+
+                    for (var i in s_a) {
+                    	summ_array[i] = s_a[i]
+                    }
+
+}
+                    calDayCell.summ_array = summ_array;
+                    if (summ > 0) {
+                     calDayCell.summ_array = summ_array;
+                     calDayCell.setHtml(summ)
+                     calDayCell.setSumm(summ)
+                     calDayCell.updateWeekSum();
+                     updateMonthSum()
+
+                    }
+
+                    if (html != '') {
+                    	calDayCell.setValue(html)
+                    	//calDayCell.jqyObj.data("value", html);
                     }
            }
-
+            summDiv = '<div class="sum">0</div>'
+            $('#summs').append(summDiv)
             calWeekObj = this.buildCalendarWeek(); // week <div/>
             calWeekHeaderObj = this.buildCalendarWeekHeader(); // week header <div/>
             for (var dayIndex = 0; dayIndex < Calendar.dayNames.length; dayIndex++) {
@@ -1081,7 +1109,9 @@
             this.addWeek(calWeekObj);
 
             // add middle weeks & week headers
+           
             for (var weekIndex = 2; weekIndex < numberWeekRows; weekIndex++) {
+            	$('#summs').append(summDiv);
                 calWeekObj = this.buildCalendarWeek(); // week <div/>
                 calWeekHeaderObj = this.buildCalendarWeekHeader(); // week header <div/>
                 for (var dayIndex = 0; dayIndex < Calendar.dayNames.length; dayIndex++) {
@@ -1137,10 +1167,11 @@
             // add last week & last week header
             calWeekObj = this.buildCalendarWeek(); // week <div/>
             calWeekHeaderObj = this.buildCalendarWeekHeader(); // week header <div/>
+            $('#summs').append(summDiv)
             for (var dayIndex = 0; dayIndex < Calendar.dayNames.length; dayIndex++) {
                 calDayCell = this.buildCalendarDayCell();
                 calDayCell.setXCoord(dayIndex + 1);
-                calDayCell.setYCoord(5);
+                calDayCell.setYCoord(numberWeekRows);
                 calWeekHeaderCellObj = this.buildCalendarWeekHeaderCell();
                 if (dayNum <= daysInCurrentMonth) {
                     // this month
@@ -2324,6 +2355,8 @@
          * Initialized the plugin. Builds the calendar.
          *
          */
+
+
         this.init = function() {
 
             // current date and time
@@ -2357,10 +2390,12 @@
             this.doResizeAll();
             this.doResizeAll();
 
+            this.calendar = calObj;
+
             return calObj;
         };
 
-
+        
         /**
          * Switch to the previous month
          *

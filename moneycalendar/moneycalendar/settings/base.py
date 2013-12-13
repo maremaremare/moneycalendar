@@ -8,7 +8,7 @@ from registration_defaults.settings import *
 
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/'
 
-
+API_LIMIT_PER_PAGE = 0
 ########## PATH CONFIGURATION
 # Absolute filesystem path to the Django project directory:
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
@@ -172,7 +172,7 @@ DJANGO_APPS = (
     # Admin panel and documentation:
 
     'django.contrib.admin',
-    'registration'
+    'registration',
     # 'django.contrib.admindocs',
 )
 
@@ -180,7 +180,7 @@ THIRD_PARTY_APPS = (
 
     # 'gunicorn',
     # Database migration helpers:
-    'south', 'tastypie',
+    'south', 'tastypie','mptt', 'treeadmin',
 )
 
 # Apps specific for this project go here.

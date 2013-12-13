@@ -158,7 +158,7 @@ Style for Saturday week header cell.
 
 .sum {
 	background-color: #C3D9FF;
-	width: 30px;
+	width: auto;
 	height:30px;
 	color:black;
 	position:relative;
@@ -169,5 +169,5 @@ Style for Saturday week header cell.
 	width: 50px;
 	position:absolute;
 	left:80%;
-	top:15%;
+	top:17%;
 }
